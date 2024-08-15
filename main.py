@@ -67,7 +67,7 @@ def main():
     ### Interact with agents
 
     names_text = ", ".join(agent_names)
-    observation = f"こんにちは！調子はどう？他のエージェントたち（{names_text}）にはなしかけてみたら？ {agent_names[-1]}がなにか言ってたような気がするよ。"
+    observation = f"こんにちは！調子はどう？他のエージェントたち（{names_text}）にはなしかけてみたら？ {agent_names[-1]}がなにか言ってたよ。"
 
     run_conversation(mono.agents, agent_names, observation)
 
