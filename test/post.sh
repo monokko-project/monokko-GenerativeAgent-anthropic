@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d '{"agent_name": "ぶっくん","question": "おはよう！おなかが減ったよ"}' http://192.168.1.102:11030/interact 
