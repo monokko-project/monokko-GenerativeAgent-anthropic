@@ -50,6 +50,9 @@ class GenerativeAgent(BaseModel):
     def chain(self, prompt: PromptTemplate) -> LLMChain:
         """Create a chain with the same settings as the agent."""
 
+
+        # print(prompt)
+
         return LLMChain(
             llm=self.llm, prompt=prompt, verbose=self.verbose, memory=self.memory
         )
@@ -162,11 +165,21 @@ Relevant context:
         self, observation: str, now: Optional[datetime] = None
     ) -> Tuple[bool, str]:
         """React to a given observation."""
+        """
         call_to_action_template = (
             "What would {agent_name} say? To end the conversation, write:"
             ' GOODBYE: "what to say". Otherwise to continue the conversation,'
             ' write: SAY: "what to say next"\n\n'
         )
+        """
+
+        call_to_action_template = (
+            "What would {agent_name} say? And print your emotional parameter. [happiness:1-10, sadness:1-10, fear:1-10, anger:1-10, surprise:1-10] default is all parameters are 1. And, you can choose a action from [ 1.move to right / 2.move to left / 3.sleep / 4.look around ]. Within 100 characters in Japanese. To end the conversation, write:"
+            ' GOODBYE: "what to say". Otherwise to continue the conversation,'
+            ' write: SAY: "what to say next.\n\n'
+            ' output example: hi, I am great! thank you [happiness:8, sadness:1, fear:1, anger:1, surprise:1, action:4, reason:"Observe what others are doing"] \n\n'
+        )
+
         full_result = self._generate_reaction(
             observation, call_to_action_template, now=now
         )
