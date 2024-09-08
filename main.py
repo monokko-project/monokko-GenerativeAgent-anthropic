@@ -42,10 +42,58 @@ def run_conversation(agents: dict, agent_keys: list,  initial_observation: str) 
             print(observation)
             # observation = f"{agent.name} said {reaction}"
             if not stay_in_dialogue:
+                # None
                 break_dialogue = True
         if break_dialogue:
             break
         turns += 1
+
+def run(mono: Monokko, agent_names) -> None:
+    ### Interact with agents
+
+    names_text = ", ".join(agent_names)
+    observation = f"他のエージェントたち（{names_text}）に心配事があれば相談してみて！思いついたことは適当にしゃべってみよう"
+
+    run_conversation(mono.agents, agent_names, observation)
+
+
+def create_merged_agent(mono: Monokko, agent_names, merged_agent_name: str = "きゅーぶん") -> None:
+    
+    mono.merge_agents(agent_names, merged_agent_name)
+    print(mono.agent_merged)
+
+    return mono
+
+
+def user_interaction(mono: Monokko, agent_names) -> None:
+
+    while True:
+        print("Which agent would you like to interact with?")
+        for i, agent_name in enumerate(agent_names):
+            print(f"{i+1}. {agent_name}")
+
+
+        agent_index = int(input("Enter the agent number: ")) - 1
+
+        if agent_index < 0 or agent_index >= len(agent_names):
+            if agent_index == -1:
+                break
+
+            print("Invalid agent number. Please try again.")
+            continue
+
+        agent_name = agent_names[agent_index]
+
+        print(f"Interacting with {agent_name}...")
+        observation = input("Enter your observation: ")
+
+        stay_in_dialogue, mono_observation = mono.agents[agent_name].generate_dialogue_response(
+            observation
+        )
+
+        print(mono_observation)
+
+
 
 
 def main():
@@ -64,14 +112,21 @@ def main():
         mono.agents[config["name"]].add_observations(config["observations"])
         print(mono.agents[config["name"]].get_summary())
 
-    ### Interact with agents
 
-    names_text = ", ".join(agent_names)
-    observation = f"こんにちは！調子はどう？他のエージェントたち（{names_text}）にはなしかけてみたら？ {agent_names[-1]}がなにか言ってたよ。"
+    # user_interaction(mono, agent_names)
+    # mono.merge_agents(agent_names, merged_agent_name="きゅーぶん")
+    # print(mono.agent_merged.get_summary())
 
-    run_conversation(mono.agents, agent_names, observation)
+    run(mono, agent_names)
+
+    print("Done!" + "-"*50)
+
+    run(mono, agent_names)
 
 
+    print("Done!" + "-"*50)
+
+    run(mono, agent_names)
 
 if __name__ == "__main__":
     _set_up()
